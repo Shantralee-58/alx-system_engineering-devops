@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Set up a domain name for web-01 server
+
+# Domain name provided by .TECH Domains (replace with your actual domain)
+domain_name= idahkhumalo.tech
+
+# IP address of your web-01 server (replace with your actual server's IP)
+web_server_ip= 52.3.242.164
+
+# Configure DNS records with an A entry
+echo "$domain_name" > /etc/nginx/sites-available/default
+sed -i "s/server_name _;/server_name $domain_name;/" /etc/nginx/sites-available/default
+service nginx reload
+
+# Verify DNS configuration
+dig "$domain_name"
+
+# Update Project website URL in your profile
+# Note: Manually update the Project website URL on the profile page with your domain name.
+
+# Output domain name
+echo "$domain_name"
