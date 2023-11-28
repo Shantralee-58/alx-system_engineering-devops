@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
-# This script installs and configures Nginx on an Ubuntu machine.
+# Installs Nginx with the following configurations:
+#+    Listens on port 80.
+#+    Returns a page containing "Hello World!" when queried
+#++    at the root with a curl GET request.
 
-# Install Nginx with the -y option to automatically answer yes to prompts
+#  updates the package lists for available software packages.
 apt-get update
+# installs the Nginx web server.
 apt-get install -y nginx
 
-# Start Nginx (not using systemctl)
-/usr/sbin/nginx
+# Creates the /etc/nginx/html directory, which will serve as the document root directory for Nginx.
+mkdir /etc/nginx/html
+#  creates an empty index.html file inside the /etc/nginx/html directory.
+touch /etc/nginx/html/index.html
+#  sets the content of the index.html file to "Hello World!" using the echo command.
+echo "Hello World!" > /etc/nginx/html/index.html
+# Sets Nginx to listen on port 80 and serve files from the /etc/nginx/html directory.
+printf %s "server {
+     listen      80;
+     listen      [::]:80 default_server;
+     root        /etc/nginx/html;
+     index       index.html index.htm;
+}
+" > /etc/nginx/sites-available/default
 
-# Create a simple HTML page with the content "Hello World!"
-echo "Hello World!" > /usr/share/nginx/html/index.html
-
-# Ensure Nginx is listening on port 80
-listen_config="listen 80;"
-if ! grep -q "$listen_config" /etc/nginx/sites-available/default; then
-    echo "$listen_config" >> /etc/nginx/sites-available/default
-fi
-
-# Reload Nginx to apply the changes
-/usr/sbin/nginx -s reload
-
-# Check if Nginx is running
-if pgrep -x "nginx" > /dev/null; then
-    echo "Nginx is running."
-else
-    echo "Nginx is not running. Please check logs in /var/log/nginx/ for more information."
-fi
+# Restarts the Nginx service to apply the configuration changes.
+service nginx restart
