@@ -1,28 +1,42 @@
 #!/usr/bin/env bash
 # Installs Nginx with the following configurations:
-#+    Listens on port 80.
-#+    Returns a page containing "Hello World!" when queried
-#++    at the root with a curl GET request.
+# - Listens on port 80.
+# - Returns a page containing "Hello World!" when queried
+#   at the root with a curl GET request.
 
-#  updates the package lists for available software packages.
+# Update the package lists for available software packages.
 apt-get update
-# installs the Nginx web server.
+# Install the Nginx web server.
 apt-get install -y nginx
 
-# Creates the /etc/nginx/html directory, which will serve as the document root directory for Nginx.
-mkdir /etc/nginx/html
-#  creates an empty index.html file inside the /etc/nginx/html directory.
+# Create the /etc/nginx/html directory, which will serve as the document root directory for Nginx.
+mkdir -p /etc/nginx/html
+# Create an empty index.html file inside the /etc/nginx/html directory.
 touch /etc/nginx/html/index.html
-#  sets the content of the index.html file to "Hello World!" using the echo command.
+# Set the content of the index.html file to "Hello World!" using the echo command.
 echo "Hello World!" > /etc/nginx/html/index.html
-# Sets Nginx to listen on port 80 and serve files from the /etc/nginx/html directory.
+
+# Update the default Nginx configuration to include a server block.
 printf %s "server {
-     listen      80;
-     listen      [::]:80 default_server;
-     root        /etc/nginx/html;
-     index       index.html index.htm;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /etc/nginx/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
 }
 " > /etc/nginx/sites-available/default
 
-# Restarts the Nginx service to apply the configuration changes.
+# Remove the default symbolic link from sites-enabled to avoid conflicts.
+rm -f /etc/nginx/sites-enabled/default
+
+# Create a symbolic link from sites-available to sites-enabled.
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+# Restart the Nginx service to apply the configuration changes.
 service nginx restart
