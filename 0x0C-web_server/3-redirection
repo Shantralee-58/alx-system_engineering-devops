@@ -36,10 +36,10 @@ sudo service nginx reload
 sleep 2
 
 # Verify that the redirection is configured correctly
-response_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/redirect_me)
+response=$(curl -s -I http://localhost/redirect_me)
 
-if [ "$response_code" -eq 301 ]; then
+if [[ "$response" == *"301 Moved Permanently"* ]]; then
     echo "Nginx configured for redirection. Verification passed."
 else
-    echo "Verification failed. Expected HTTP code 301, but got $response_code."
+    echo "Verification failed. Expected HTTP code 301, but got: $response"
 fi
