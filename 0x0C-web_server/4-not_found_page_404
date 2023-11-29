@@ -1,39 +1,25 @@
 #!/usr/bin/env bash
 
-# Configure Nginx for custom 404 page
+# Create the Nginx configuration for custom 404 page
+echo "location /404 {" | sudo tee /etc/nginx/sites-available/404
+echo "    error_page 404 /404.html;" | sudo tee -a /etc/nginx/sites-available/404
+echo "    location = /404.html {" | sudo tee -a /etc/nginx/sites-available/404
+echo "        root /usr/share/nginx/html;" | sudo tee -a /etc/nginx/sites-available/404
+echo "        internal;" | sudo tee -a /etc/nginx/sites-available/404
+echo "    }" | sudo tee -a /etc/nginx/sites-available/404
+echo "}" | sudo tee -a /etc/nginx/sites-available/404
 
-# Install Nginx if not already installed
-sudo apt-get update
-sudo apt-get install -y nginx
+# Enable the Nginx configuration
+sudo ln -sf /etc/nginx/sites-available/404 /etc/nginx/sites-enabled/
 
-# Create a custom 404 page with the specified string
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+# Create the custom 404 HTML page
+echo '<!DOCTYPE html>' | sudo tee /usr/share/nginx/html/404.html
+echo '<html>' | sudo tee -a /usr/share/nginx/html/404.html
+echo '<head><title>404 Not Found</title></head>' | sudo tee -a /usr/share/nginx/html/404.html
+echo '<body>' | sudo tee -a /usr/share/nginx/html/404.html
+echo '<center><h1>404 Not Found</h1></center>' | sudo tee -a /usr/share/nginx/html/404.html
+echo '<hr><center>Ceci n'"'"'est pas une page</center>' | sudo tee -a /usr/share/nginx/html/404.html
+echo '</body></html>' | sudo tee -a /usr/share/nginx/html/404.html
 
-# Configure Nginx to use the custom 404 page
-sudo bash -c 'cat > /etc/nginx/sites-available/default <<EOL
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.html;
-
-    server_name _;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-
-    error_page 404 /404.html;
-    location = /404.html {
-        internal;
-    }
-}
-EOL'
-
-# Restart Nginx to apply the changes
+# Restart Nginx
 sudo service nginx restart
