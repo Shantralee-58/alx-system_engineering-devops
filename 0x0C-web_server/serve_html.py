@@ -1,4 +1,4 @@
-#!/svr/bin/env bash
+#!/usr/bin/env python3
 
 import http.server
 import socketserver
@@ -7,7 +7,6 @@ PORT = 8080
 
 Handler = http.server.SimpleHTTPRequestHandler
 
-httpd = socketserver.TCPServer(("", PORT), Handler)
-
-print("Serving at port", PORT)
-httpd.serve_forever()
+with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    print("Serving at port", PORT)
+    httpd.serve_forever()
