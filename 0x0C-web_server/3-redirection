@@ -1,49 +1,37 @@
 #!/usr/bin/env bash
 
-# Installs Nginx with the following configurations:
-#+    Listens on port 80.
-#+    Returns a page containing "Hello World!" when queried
-#++    at the root with a curl GET request.
-
-#  updates the package lists for available software packages.
-apt-get update
-# installs the Nginx web server.
+# Install Nginx web server if not installed
+apt-get update -y
 apt-get install -y nginx
 
-# Creates the /etc/nginx/html directory, which will serve as the document root directory for Nginx.
-mkdir /etc/nginx/html
-#  creates an empty index.html file inside the /etc/nginx/html directory.
-touch /etc/nginx/html/index.html
-#  sets the content of the index.html file to "Hello World!" using the echo command.
-echo "Hello World!" > /etc/nginx/html/index.html
-# Sets Nginx to listen on port 80 and serve files from the /etc/nginx/html directory.
-printf %s "server {
-     listen      80;
-     listen      [::]:80 default_server;
-     root        /etc/nginx/html;
-     index       index.html index.htm;
-}
-" > /etc/nginx/sites-available/default
+# Create a sample HTML file with "Hello World!" content
+echo "Hello World!" > /var/www/html/index.html
 
-# Configure a new server block for redirection
-echo "server {
-    listen 80;
-    listen [::]:80;
+# Configure Nginx to serve the sample HTML file
+printf %s "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
 
     root /var/www/html;
+    index index.html;
 
-    # Add index.php to the list if you are using PHP
-    index index.html index.htm index.nginx-debian.html;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
 
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
-}" | sudo tee /etc/nginx/sites-available/redirect
+}
+" > /etc/nginx/sites-available/default
 
-# Enable the new site configuration
-sudo ln -s /etc/nginx/sites-available/redirect /etc/nginx/sites-enabled/
+# Remove the default symbolic link
+rm -f /etc/nginx/sites-enabled/default
 
+# Create a new symbolic link
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
-# Test Nginx configuration and reload
-sudo nginx -t
-sudo service nginx reload
+# Restart Nginx to apply the changes
+service nginx restart
