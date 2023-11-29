@@ -1,25 +1,34 @@
 #!/usr/bin/env bash
 
-# Create the Nginx configuration for custom 404 page
-echo "location /404 {" | sudo tee /etc/nginx/sites-available/404
-echo "    error_page 404 /404.html;" | sudo tee -a /etc/nginx/sites-available/404
-echo "    location = /404.html {" | sudo tee -a /etc/nginx/sites-available/404
-echo "        root /usr/share/nginx/html;" | sudo tee -a /etc/nginx/sites-available/404
-echo "        internal;" | sudo tee -a /etc/nginx/sites-available/404
-echo "    }" | sudo tee -a /etc/nginx/sites-available/404
-echo "}" | sudo tee -a /etc/nginx/sites-available/404
+# Configure Nginx for custom 404 page
 
-# Enable the Nginx configuration
-sudo ln -sf /etc/nginx/sites-available/404 /etc/nginx/sites-enabled/
+# Create the custom 404 page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
 
-# Create the custom 404 HTML page
-echo '<!DOCTYPE html>' | sudo tee /usr/share/nginx/html/404.html
-echo '<html>' | sudo tee -a /usr/share/nginx/html/404.html
-echo '<head><title>404 Not Found</title></head>' | sudo tee -a /usr/share/nginx/html/404.html
-echo '<body>' | sudo tee -a /usr/share/nginx/html/404.html
-echo '<center><h1>404 Not Found</h1></center>' | sudo tee -a /usr/share/nginx/html/404.html
-echo '<hr><center>Ceci n'"'"'est pas une page</center>' | sudo tee -a /usr/share/nginx/html/404.html
-echo '</body></html>' | sudo tee -a /usr/share/nginx/html/404.html
+# Create a new Nginx configuration file for the custom 404 page
+echo "
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    server_name _;
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+" | sudo tee /etc/nginx/sites-enabled/404
+
+# Test the Nginx configuration
+sudo nginx -t
 
 # Restart Nginx
 sudo service nginx restart
