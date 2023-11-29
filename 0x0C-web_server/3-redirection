@@ -33,7 +33,7 @@ EOL
 sudo service nginx reload
 
 # Verify that the redirection is configured correctly
-response_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/redirect_me)
+response_code=$(curl -s -o /dev/null -w "%{http_code}" 52.3.242.164/redirect_me)
 expected_code=301
 
 if [ "$response_code" -eq "$expected_code" ]; then
