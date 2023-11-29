@@ -32,4 +32,12 @@ EOL
 # Reload Nginx to apply changes
 sudo service nginx reload
 
-echo "Nginx configured for redirection. Check with curl -sI http://localhost/redirect_me"
+# Verify that the redirection is configured correctly
+response_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/redirect_me)
+expected_code=301
+
+if [ "$response_code" -eq "$expected_code" ]; then
+    echo "Nginx configured for redirection. Verification passed."
+else
+    echo "Verification failed. Expected HTTP code $expected_code, but got $response_code."
+fi
