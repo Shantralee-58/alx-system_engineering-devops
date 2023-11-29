@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
+# This script configures Nginx for a 301 Moved Permanently redirection
 
-# Install Nginx web server if not installed
-apt-get update -y
-apt-get install -y nginx
+# Install Nginx if not already installed
+sudo apt-get update
+sudo apt-get install -y nginx
 
-# Create a sample HTML file with "Hello World!" content
-echo "Hello World!" > /var/www/html/index.html
+# Backup the default Nginx configuration file
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Configure Nginx to serve the sample HTML file
-printf %s "server {
+# Create a new Nginx configuration file for redirection
+sudo tee /etc/nginx/sites-available/default > /dev/null <<EOL
+server {
     listen 80 default_server;
     listen [::]:80 default_server;
 
@@ -18,20 +20,16 @@ printf %s "server {
     server_name _;
 
     location / {
-        try_files \$uri \$uri/ =404;
+        try_files $uri $uri/ =404;
     }
 
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
 }
-" > /etc/nginx/sites-available/default
+EOL
 
-# Remove the default symbolic link
-rm -f /etc/nginx/sites-enabled/default
+# Reload Nginx to apply changes
+sudo service nginx reload
 
-# Create a new symbolic link
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-
-# Restart Nginx to apply the changes
-service nginx restart
+echo "Nginx configured for redirection. Check with curl -sI http://localhost/redirect_me"
