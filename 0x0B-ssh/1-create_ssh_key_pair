@@ -1,27 +1,10 @@
 #!/bin/bash
 
-# Script to create an RSA key pair
+# Run ls command before the script
+ls
 
-# Set the key file name
-key_name="school"
+# Generate RSA key pair with a passphrase
+ssh-keygen -t rsa -b 4096 -C "vagrant@ubuntu" -f school
 
-# Set the number of bits
-bits=4096
-
-# Set the passphrase
-passphrase="betty"
-
-# Generate the key pair
-ssh-keygen -t rsa -b $bits -C "vagrant@ubuntu" -f $key_name -N "$passphrase"
-
-# Display information
-echo "Generating public/private rsa key pair."
-echo "Your identification has been saved in $key_name."
-echo "Your public key has been saved in ${key_name}.pub."
-echo "The key fingerprint is:"
-ssh-keygen -lf ${key_name}.pub
-echo "The key's randomart image is:"
-ssh-keygen -lvf ${key_name}.pub
-
-# List the generated files
-ls -l $key_name* 
+# Run ls command after the key generation
+ls 
