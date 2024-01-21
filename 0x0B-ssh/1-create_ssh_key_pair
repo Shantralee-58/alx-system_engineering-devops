@@ -1,2 +1,21 @@
 #!/bin/bash
-ssh-keygen -t rsa -b 4096 -C "vagrant@ubuntu" -f ~/.ssh/school -N "betty"
+
+# Specify the correct path for the key pair
+KEY_PATH=~/.ssh/school
+
+# Check if the key pair already exists
+if [ -e "$KEY_PATH" ]; then
+    echo "$KEY_PATH already exists."
+    read -p "Overwrite (y/n)? " overwrite
+    if [ "$overwrite" != "y" ]; then
+        echo "Aborted."
+        exit 0
+    fi
+fi
+
+# Generate the key pair
+ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "betty"
+
+echo "Key pair generated successfully:"
+echo "Private key: $KEY_PATH"
+echo "Public key: $KEY_PATH.pub"
