@@ -14,8 +14,5 @@ ssh-keygen -t rsa -b $BITS -f $KEY_NAME -N $PASSPHRASE
 echo "Key fingerprint is:"
 ssh-keygen -lf $KEY_NAME
 
-# Move the public key to the correct filename
-mv $KEY_NAME.pub $KEY_NAME.pub
-
 # Display the content of the current directory
-ls
+ls -l
