@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Specify the correct path for the key pair
-KEY_PATH=~/.ssh/school
+# Create an RSA key pair with a passphrase
 
-# Check if the key pair already exists
-if [ -e "$KEY_PATH" ]; then
-    echo "$KEY_PATH already exists."
-    read -p "Overwrite (y/n)? " overwrite
-    if [ "$overwrite" != "y" ]; then
-        echo "Aborted."
-        exit 0
-    fi
-fi
+# Define variables
+KEY_NAME="school"
+BITS=4096
+PASSPHRASE="betty"
 
 # Generate the key pair
-ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "betty"
+ssh-keygen -t rsa -b $BITS -f $KEY_NAME -N $PASSPHRASE
 
-echo "Key pair generated successfully:"
-echo "Private key: $KEY_PATH"
-echo "Public key: $KEY_PATH.pub"
+# Display the key fingerprint and randomart image
+echo "Key fingerprint is:"
+ssh-keygen -lf $KEY_NAME
+
+# Move the public key to the correct filename
+mv $KEY_NAME.pub $KEY_NAME.pub
+
+# Display the content of the current directory
+ls
