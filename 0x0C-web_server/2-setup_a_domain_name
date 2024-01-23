@@ -1,0 +1,4 @@
+#!/bin/bash
+# This script provides the domain name for the web-01 server
+
+echo "myschool.tech"
