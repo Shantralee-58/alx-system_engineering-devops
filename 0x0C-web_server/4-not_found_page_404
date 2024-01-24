@@ -1,39 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+#
 
-# Add a custom 404 page with the required string
-echo "Ceci n'est pas une page" > /var/www/html/404.html
+echo -e "Updating and installing Nginx.\n"
+sudo apt-get update -y -qq && \
+	 sudo apt-get install nginx -y
 
-# Create the necessary configuration file
-cat <<EOL > /etc/nginx/sites-available/not_found_page
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+echo -e "\nSetting up some minor stuff.\n"
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
+# starting nginx service
+sudo service nginx start
 
-    server_name _;
+# allowing nginx on firewall
+sudo ufw allow 'Nginx HTTP'
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+# Give the user ownership to website files for easy editing
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
 
-    error_page 404 /404.html;
-    location = /404.html {
-        internal;
-        return 404;
-    }
+# Backup default index
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
-    # Additional server configurations...
+# Creating new index
+echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
 
-}
-EOL
+# Setting up /redirect_me to a youtube video
+sudo sed -i '24i\	rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
 
-# Create a symbolic link to enable the new site
-ln -s /etc/nginx/sites-available/not_found_page /etc/nginx/sites-enabled/
+# Set up a 404 page
+echo "Ceci n'est pas une page" >> /var/www/html/error_404.html
+sudo sed -i '25i\	error_page 404 /error_404.html;' /etc/nginx/sites-available/default
 
-# Remove the default configuration to avoid conflicts
-rm -f /etc/nginx/sites-enabled/default
+# Restarting nginx
+sudo service nginx restart
 
-# Restart nginx
-service nginx restart
+echo -e "\nCompleted.\n"
