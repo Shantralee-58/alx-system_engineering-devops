@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+apt-get update
+apt-get install -y nginx
+service nginx start || true
+grep -q "listen 80;" /etc/nginx/sites-available/default || sed -i 's/^\(\s*listen\s*.\)80/\180/' /etc/nginx/sites-available/default && service nginx reload
