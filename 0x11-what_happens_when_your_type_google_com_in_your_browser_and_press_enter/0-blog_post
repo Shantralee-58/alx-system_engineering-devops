@@ -1,0 +1,31 @@
+Title: How Does Your Browser Reach Google?
+
+Introduction:
+Have you ever wondered what happens when you type "https://www.google.com" into your browser? Let's break it down step by step to understand the magic behind the scenes.
+
+DNS Request:
+When you type the URL, your browser sends a request to a special phonebook called DNS (Domain Name System). DNS looks up "www.google.com" and returns the address where Google's website is stored.
+
+TCP/IP:
+Once your browser knows where Google is, it sets up a connection using TCP/IP, a language that devices use to talk to each other on the internet. It's like making a phone call to Google's server.
+
+Firewall:
+As the connection is made, it might pass through a firewall, a digital security guard. The firewall checks if the connection is safe and lets it through if everything looks okay.
+
+HTTPS/SSL:
+To keep your conversation private, your browser and Google's server use a special code called HTTPS/SSL. It's like speaking in a secret language that only you and Google understand, so nobody else can eavesdrop.
+
+Load Balancer:
+Once your browser reaches Google, it might encounter a traffic cop called a load balancer. This cop helps spread out the visitors evenly to different computers so that Google doesn't get overwhelmed.
+
+Web Server:
+When your browser finally arrives at Google's house, it's greeted by a web server. This server is like a waiter—it serves up web pages to your browser so you can see Google's search engine, images, and more.
+
+Application Server:
+Sometimes, Google needs extra help to show you personalized content or process your search queries. That's where the application server comes in. It's like a chef in the kitchen, cooking up special dishes just for you.
+
+Database:
+Behind the scenes, Google stores all its information in a giant digital filing cabinet called a database. It keeps track of everything from search results to user preferences, making sure everything runs smoothly.
+
+Conclusion:
+So, the next time you type "https://www.google.com" into your browser, remember the journey it takes to reach Google's doorstep. From DNS lookups to web servers and databases, each step plays a vital role in delivering the Google experience we all know and love.

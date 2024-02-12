@@ -1,0 +1,28 @@
+Flow of Request: Typing 'https://www.google.com' in Browser
+
+Description of Diagram:
+This diagram illustrates the sequence of events that occur when a user types "https://www.google.com" into their browser and presses Enter. Each component depicted in the diagram plays a crucial role in processing the request and delivering the desired web page to the user.
+
+Explanation of Components:
+
+DNS Resolution: The process begins with a DNS resolution, where the browser queries DNS servers to translate the domain name "www.google.com" into an IP address.
+
+Server IP and Port: Once the IP address is obtained, the browser establishes a connection with the Google server using the appropriate port, typically port 443 for HTTPS.
+
+Encryption (HTTPS/SSL): The traffic between the browser and the Google server is encrypted using HTTPS/SSL, ensuring secure communication and protecting against eavesdropping or tampering.
+
+Firewall: The connection may pass through a firewall, which acts as a barrier to unauthorized access and checks the incoming traffic for any potential threats.
+
+Load Balancer: Incoming requests are distributed via a load balancer to multiple servers, ensuring optimal performance and scalability by evenly distributing the traffic.
+
+Web Server: The web server receives the request and responds by serving the requested web page, such as the Google search engine homepage or search results.
+
+Application Server: In cases where dynamic content is involved, an application server may generate the web page dynamically, executing business logic and processing user requests.
+
+Database: The application server may request data from the database to personalize the web page or retrieve additional information, such as user preferences or search results.
+
+Interconnections:
+The diagram illustrates how each component interacts with one another to process the request seamlessly. For example, the DNS resolution is essential for determining the server's IP address, which is then used to establish a connection. Similarly, the load balancer distributes traffic to multiple servers, ensuring reliability and scalability.
+
+Conclusion/Summary:
+In summary, this diagram provides a visual representation of the intricate process involved in handling a user request when typing "https://www.google.com" in the browser. By understanding the flow of the request and the role of each component, we gain insight into the underlying technology powering the internet and web browsing experience.
