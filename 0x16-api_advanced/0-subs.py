@@ -1,23 +1,42 @@
 #!/usr/bin/python3
-'''
-    this module contains the function number_of_subscribers
-'''
+"""
+model holding the first task
+"""
 import requests
-from sys import argv
 
 
 def number_of_subscribers(subreddit):
-    '''
-        returns the number of subscribers for a given subreddit
-    '''
-    user = {'User-Agent': 'Lizzie'}
-    url = requests.get('https://www.reddit.com/r/{}/about.json'
-                       .format(subreddit), headers=user).json()
-    try:
-        return url.get('data').get('subscribers')
-    except Exception:
+    """
+    queries the Reddit API and returns the number of subscribers
+    (not active users, total subscribers) for a given subreddit.
+    If an invalid subreddit is given, the function
+    should return 0.
+
+    parameters:
+    -----------
+    subreddit: a string represent the subreddit
+
+    return:
+    -----------
+    the total number of subscribers
+    """
+    if not subreddit:
         return 0
 
+    headers = {"User-Agent": "ALX/1", "Accept": "application/json"}
+    url = r"https://www.reddit.com/"
+    path = r"r/{}/about.json".format(subreddit)
+    number_subs = 0
 
-if __name__ == "__main__":
-    number_of_subscribers(argv[1])
+    responce = requests.get(url+path, headers=headers, allow_redirects=False)
+
+    if responce.status_code == 200:
+        try:
+            data = responce.json()['data']
+            number_subs = data['subscribers']
+        except KeyError as e:
+            return int(number_subs)
+    else:
+        return 0
+
+    return int(number_subs)

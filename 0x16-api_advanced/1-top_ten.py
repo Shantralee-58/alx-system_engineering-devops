@@ -1,37 +1,44 @@
 #!/usr/bin/python3
 """
-Script to print hot posts on a given Reddit subreddit.
+model that hold task 1 function top_ten that fitch reddit API
 """
-
 import requests
 
 
 def top_ten(subreddit):
-    """Print the titles of the 10 hottest posts on a given subreddit."""
-    # Construct the URL for the subreddit's hot posts in JSON format
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    """queries the reddit API for the subreddit and find
+    its top ten post
+    parameter:
+    -----------
+    subreddit: str, text represents the subreddit title
+    """
+    url = "https://www.reddit.com/"
+    path = "r/{}/hot.json".format(subreddit)
+    headers = {"User-Agent": "ALX/1", "Accept": "application/json"}
+    posts_titles = []
 
-    # Define headers for the HTTP request, including User-Agent
-    headers = {
-        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
-    }
-
-    # Define parameters for the request, limiting the number of posts to 10
-    params = {
-        "limit": 10
-    }
-
-    # Send a GET request to the subreddit's hot posts page
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-
-    # Check if the response status code indicates a not-found error (404)
-    if response.status_code == 404:
-        print("None")
+    if subreddit is None:
+        print(None)
         return
+    res = requests.get(url+path, headers=headers, allow_redirects=False)
 
-    # Parse the JSON response and extract the 'data' section
-    results = response.json().get("data")
+    if res.raise_for_status():
+        print(None)
+        return
+    if res.status_code == 200:
+        try:
+            post_list = res.json()['data']['children']
+            for idx, post in enumerate(post_list):
+                if idx >= 10:
+                    break
+                posts_titles.append(post['data']['title'])
+        except Exception as e:
+            pass
 
-    # Print the titles of the top 10 hottest posts
-    [print(c.get("data").get("title")) for c in results.get("children")]
+        if posts_titles:
+            for title in posts_titles:
+                print(title)
+        else:
+            print(None)
+    else:
+        print(None)
